@@ -1,0 +1,17 @@
+export const ErrorMessages = {
+  UNAUTHORIZED: 'دسترسی غیرمجاز است',
+  FORBIDDEN: 'شما مجوز انجام این عملیات را ندارید',
+  NOT_FOUND: 'مورد درخواستی یافت نشد',
+  BAD_REQUEST: 'درخواست نامعتبر است',
+  VALIDATION_FAILED: 'اعتبارسنجی داده‌ها با خطا مواجه شد',
+  INTERNAL_ERROR: 'خطای داخلی سرور',
+  INVALID_CREDENTIALS: 'ایمیل یا رمز عبور اشتباه است',
+  ACCOUNT_PENDING: 'حساب شما در انتظار تأیید ادمین است',
+  ACCOUNT_REJECTED: 'درخواست دسترسی شما تأیید نشده است',
+  ROLE_CHANGE_FORBIDDEN: 'فقط سازنده می‌تواند نقش کاربران را تغییر دهد',
+  SELF_ROLE_CHANGE_FORBIDDEN: 'نمی‌توانید نقش خود را پایین بیاورید',
+  EMAIL_EXISTS: 'این ایمیل قبلاً ثبت شده است',
+  SLUG_EXISTS: 'این شناسه یکتا قبلاً استفاده شده است',
+  SETTINGS_NOT_FOUND: 'تنظیمات سایت یافت نشد',
+  FILE_REQUIRED: 'فایل الزامی است',
+} as const;
