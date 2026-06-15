@@ -2,6 +2,7 @@ node_modules
 dist
 .env.development
 .env.production
+.env.example
 public/uploads/*
 !public/uploads/.gitkeep
 coverage
