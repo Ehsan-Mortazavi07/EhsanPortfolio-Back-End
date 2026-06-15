@@ -12,7 +12,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { PaginatedResponse } from '../common/interfaces/paginated-response.interface';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { User, UserDocument, UserRole, UserStatus } from './schemas/user.schema';
-import { assertRoleChangeAllowed } from './user-role.util';
+import { assertRoleChangeAllowed, assertUserDeletionAllowed } from './user-role.util';
 
 export function isUserApproved(user: Pick<UserDocument, 'status'>): boolean {
   return !user.status || user.status === UserStatus.APPROVED;
@@ -150,8 +150,20 @@ export class UsersService {
     return updated;
   }
 
-  async remove(id: string): Promise<void> {
-    await this.findById(id);
+  async remove(id: string, actor?: UserDocument): Promise<void> {
+    const user = await this.findById(id);
+
+    if (actor) {
+      try {
+        assertUserDeletionAllowed(actor, user);
+      } catch (err) {
+        if (err instanceof Error && err.message === 'SELF_USER_DELETE_FORBIDDEN') {
+          throw new ForbiddenException(ErrorMessages.SELF_USER_DELETE_FORBIDDEN);
+        }
+        throw new ForbiddenException(ErrorMessages.USER_DELETE_FORBIDDEN);
+      }
+    }
+
     await this.userModel.findByIdAndUpdate(id, { deleted: true });
   }
 

@@ -184,8 +184,8 @@ export class AdminController {
   }
 
   @Delete('users/:id')
-  deleteUser(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  async deleteUser(@Param('id') id: string, @Req() req: { user: UserDocument }) {
+    await this.usersService.remove(id, req.user);
   }
 
   // Site Settings

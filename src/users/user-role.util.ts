@@ -12,6 +12,22 @@ export function canManageRoles(role?: UserRole | null): boolean {
   return role === UserRole.CREATOR;
 }
 
+export function canDeleteUsers(role?: UserRole | null): boolean {
+  return role === UserRole.CREATOR;
+}
+
+export function assertUserDeletionAllowed(
+  actor: UserDocument,
+  target: UserDocument,
+): void {
+  if (!canDeleteUsers(actor.role)) {
+    throw new Error('USER_DELETE_FORBIDDEN');
+  }
+  if (actor._id.toString() === target._id.toString()) {
+    throw new Error('SELF_USER_DELETE_FORBIDDEN');
+  }
+}
+
 export function assertRoleChangeAllowed(
   actor: UserDocument,
   target: UserDocument,

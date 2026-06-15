@@ -10,6 +10,8 @@ export const ErrorMessages = {
   ACCOUNT_REJECTED: 'درخواست دسترسی شما تأیید نشده است',
   ROLE_CHANGE_FORBIDDEN: 'فقط سازنده می‌تواند نقش کاربران را تغییر دهد',
   SELF_ROLE_CHANGE_FORBIDDEN: 'نمی‌توانید نقش خود را پایین بیاورید',
+  USER_DELETE_FORBIDDEN: 'فقط سازنده می‌تواند کاربران را حذف کند',
+  SELF_USER_DELETE_FORBIDDEN: 'نمی‌توانید حساب خود را حذف کنید',
   EMAIL_EXISTS: 'این ایمیل قبلاً ثبت شده است',
   SLUG_EXISTS: 'این شناسه یکتا قبلاً استفاده شده است',
   SETTINGS_NOT_FOUND: 'تنظیمات سایت یافت نشد',
