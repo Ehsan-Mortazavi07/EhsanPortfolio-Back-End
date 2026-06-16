@@ -14,6 +14,7 @@ ensureUploadsDir();
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
       envFilePath: '.env.development',
     }),
     MongooseModule.forRootAsync({

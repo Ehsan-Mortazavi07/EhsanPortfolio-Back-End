@@ -1,0 +1,21 @@
+# Deploy backend on Render (recommended — not Vercel).
+# Dashboard: New → Blueprint → connect EhsanPortfolio-Back-End repo.
+services:
+  - type: web
+    name: ehsan-portfolio-api
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install && pnpm build
+    startCommand: pnpm start:prod
+    healthCheckPath: /v1/catalog/site-settings
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
