@@ -22,4 +22,5 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
+        value: https://ehsanmor.ir,https://www.ehsanmor.ir
         sync: false
