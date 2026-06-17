@@ -6,7 +6,7 @@ services:
     runtime: node
     plan: free
     buildCommand: pnpm config set strict-dep-builds false && pnpm install --frozen-lockfile && pnpm rebuild bcrypt && pnpm build
-    startCommand: node build/src/main
+    startCommand: node build/main
     healthCheckPath: /v1/catalog/site-settings
     envVars:
       - key: NODE_ENV
