@@ -5,14 +5,18 @@ services:
     name: ehsan-portfolio-api
     runtime: node
     plan: free
-    buildCommand: corepack enable && pnpm install && pnpm build
-    startCommand: pnpm start:prod
+    buildCommand: pnpm install && pnpm build
+    startCommand: node build/src/main
     healthCheckPath: /v1/catalog/site-settings
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PNPM_VERSION
+        value: "11.6.0"
       - key: JWT_EXPIRES_IN
         value: 7d
+      - key: ALLOW_VERCEL_PREVIEW
+        value: "true"
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
