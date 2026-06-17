@@ -94,7 +94,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "bcrypt",
-      "@nestjs/core"
+      "@nestjs/core",
+      "unrs-resolver"
     ]
   }
 }

@@ -5,7 +5,7 @@ services:
     name: ehsan-portfolio-api
     runtime: node
     plan: free
-    buildCommand: pnpm install --frozen-lockfile && pnpm rebuild bcrypt && pnpm build
+    buildCommand: pnpm config set strict-dep-builds false && pnpm install --frozen-lockfile && pnpm rebuild bcrypt && pnpm build
     startCommand: node build/src/main
     healthCheckPath: /v1/catalog/site-settings
     envVars:
