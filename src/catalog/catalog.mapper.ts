@@ -15,6 +15,27 @@ function createdAtOf(doc: unknown): string | null {
   return value?.toISOString?.() ?? null;
 }
 
+export function mapContactMessage(item: {
+  _id?: { toString(): string };
+  id?: string;
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+  read?: boolean;
+  createdAt?: Date;
+}) {
+  return {
+    id: item._id?.toString?.() ?? item.id ?? '',
+    name: item.name,
+    email: item.email,
+    subject: item.subject ?? '',
+    message: item.message,
+    read: item.read ?? false,
+    createdAt: createdAtOf(item) ?? new Date().toISOString(),
+  };
+}
+
 export function mapSiteSettings(settings: SiteSettingsDocument) {
   return {
     heroTitle: settings.heroTitle,

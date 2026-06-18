@@ -63,6 +63,7 @@ import { canManageRoles } from '../users/user-role.util';
 import {
   mapArticleDetail,
   mapArticleListItem,
+  mapContactMessage,
   mapExperience,
   mapOffering,
   mapProject,
@@ -426,13 +427,15 @@ export class AdminController {
 
   // Contact Messages
   @Get('contact-messages')
-  listContactMessages(@Query() query: PaginationDto) {
-    return this.contactMessagesService.findAll(query);
+  async listContactMessages(@Query() query: PaginationDto) {
+    const result = await this.contactMessagesService.findAll(query);
+    return { ...result, items: result.items.map(mapContactMessage) };
   }
 
   @Get('contact-messages/:id')
-  getContactMessage(@Param('id') id: string) {
-    return this.contactMessagesService.findById(id);
+  async getContactMessage(@Param('id') id: string) {
+    const item = await this.contactMessagesService.findById(id);
+    return mapContactMessage(item);
   }
 
   @Patch('contact-messages/:id/read')

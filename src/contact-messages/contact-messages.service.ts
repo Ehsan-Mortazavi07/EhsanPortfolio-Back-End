@@ -26,15 +26,26 @@ export class ContactMessagesService {
   ): Promise<PaginatedResponse<ContactMessageDocument>> {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 10;
+    const q = query.q?.trim();
+    const filter = q
+      ? {
+          $or: [
+            { name: { $regex: q, $options: 'i' } },
+            { email: { $regex: q, $options: 'i' } },
+            { subject: { $regex: q, $options: 'i' } },
+            { message: { $regex: q, $options: 'i' } },
+          ],
+        }
+      : {};
 
     const [items, total] = await Promise.all([
       this.contactMessageModel
-        .find()
+        .find(filter)
         .sort({ createdAt: -1 })
         .skip((page - 1) * pageSize)
         .limit(pageSize)
         .exec(),
-      this.contactMessageModel.countDocuments(),
+      this.contactMessageModel.countDocuments(filter),
     ]);
 
     return { items, total, page, pageSize };
