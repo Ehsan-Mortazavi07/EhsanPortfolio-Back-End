@@ -5,9 +5,7 @@ build
 .env.development
 .env.production
 .env.example
-# public/uploads/*
-# !public/uploads/seed/
-# !public/uploads/seed/**
+
 coverage
 .DS_Store
 scripts
