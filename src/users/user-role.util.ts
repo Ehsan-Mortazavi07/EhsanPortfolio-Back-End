@@ -36,7 +36,10 @@ export function assertRoleChangeAllowed(
   if (dto.role === undefined) return;
 
   if (canManageRoles(actor.role)) {
-    if (actor._id.toString() === target._id.toString() && dto.role !== UserRole.CREATOR) {
+    if (
+      actor._id.toString() === target._id.toString() &&
+      dto.role !== UserRole.CREATOR
+    ) {
       throw new Error('SELF_ROLE_CHANGE_FORBIDDEN');
     }
     return;
@@ -45,7 +48,8 @@ export function assertRoleChangeAllowed(
   const isApproveAsAdmin =
     dto.role === UserRole.ADMIN &&
     dto.status === UserStatus.APPROVED &&
-    (target.status === UserStatus.PENDING || target.status === UserStatus.REJECTED);
+    (target.status === UserStatus.PENDING ||
+      target.status === UserStatus.REJECTED);
 
   const isRejectAsUser =
     dto.role === UserRole.USER && dto.status === UserStatus.REJECTED;

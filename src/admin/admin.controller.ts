@@ -17,7 +17,10 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ArticlesService } from '../articles/articles.service';
-import { CreateArticleDto, UpdateArticleDto } from '../articles/dto/article.dto';
+import {
+  CreateArticleDto,
+  UpdateArticleDto,
+} from '../articles/dto/article.dto';
 import { ContactMessagesService } from '../contact-messages/contact-messages.service';
 import { ErrorMessages } from '../common/constants/error-messages';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -159,8 +162,15 @@ export class AdminController {
   }
 
   @Post('users')
-  async createUser(@Body() dto: CreateUserDto, @Req() req: { user: UserDocument }) {
-    if (dto.role && dto.role !== UserRole.USER && !canManageRoles(req.user.role)) {
+  async createUser(
+    @Body() dto: CreateUserDto,
+    @Req() req: { user: UserDocument },
+  ) {
+    if (
+      dto.role &&
+      dto.role !== UserRole.USER &&
+      !canManageRoles(req.user.role)
+    ) {
       throw new ForbiddenException(ErrorMessages.ROLE_CHANGE_FORBIDDEN);
     }
     const user = await this.usersService.create(dto);
@@ -184,7 +194,10 @@ export class AdminController {
   }
 
   @Delete('users/:id')
-  async deleteUser(@Param('id') id: string, @Req() req: { user: UserDocument }) {
+  async deleteUser(
+    @Param('id') id: string,
+    @Req() req: { user: UserDocument },
+  ) {
     await this.usersService.remove(id, req.user);
   }
 
@@ -228,7 +241,10 @@ export class AdminController {
     const project = isMongoObjectId(identifier)
       ? await this.projectsService.findById(identifier)
       : await this.projectsService.findBySlug(identifier);
-    const updated = await this.projectsService.update(project._id.toString(), dto);
+    const updated = await this.projectsService.update(
+      project._id.toString(),
+      dto,
+    );
     return mapProject(updated);
   }
 
@@ -284,7 +300,10 @@ export class AdminController {
     const item = isMongoObjectId(identifier)
       ? await this.offeringsService.findById(identifier)
       : await this.offeringsService.findBySlug(identifier);
-    const updated = await this.offeringsService.update(item._id.toString(), dto);
+    const updated = await this.offeringsService.update(
+      item._id.toString(),
+      dto,
+    );
     return mapOffering(updated);
   }
 
@@ -454,7 +473,10 @@ export class AdminController {
     const article = isMongoObjectId(identifier)
       ? await this.articlesService.findById(identifier)
       : await this.articlesService.findBySlug(identifier);
-    const updated = await this.articlesService.update(article._id.toString(), dto);
+    const updated = await this.articlesService.update(
+      article._id.toString(),
+      dto,
+    );
     return mapArticleDetail(updated);
   }
 

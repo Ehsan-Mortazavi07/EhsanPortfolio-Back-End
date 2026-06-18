@@ -19,6 +19,10 @@ export class CreateSkillDto {
   category: SkillCategory;
 
   @IsOptional()
+  @IsString()
+  icon?: string;
+
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(5)
@@ -41,6 +45,10 @@ export class UpdateSkillDto {
   @IsOptional()
   @IsEnum(SkillCategory)
   category?: SkillCategory;
+
+  @IsOptional()
+  @IsString()
+  icon?: string;
 
   @IsOptional()
   @IsInt()

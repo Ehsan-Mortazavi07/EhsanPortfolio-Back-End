@@ -10,6 +10,11 @@ function idOf(doc: { _id?: { toString(): string } }): string {
   return doc._id?.toString() ?? '';
 }
 
+function createdAtOf(doc: unknown): string | null {
+  const value = (doc as { createdAt?: Date }).createdAt;
+  return value?.toISOString?.() ?? null;
+}
+
 export function mapSiteSettings(settings: SiteSettingsDocument) {
   return {
     heroTitle: settings.heroTitle,
@@ -32,6 +37,7 @@ export function mapSiteSettings(settings: SiteSettingsDocument) {
     aboutContentFa: settings.aboutContentFa || '',
     tickerSkills: settings.tickerSkills,
     seo: settings.seo,
+    pageSubtitles: settings.pageSubtitles ?? {},
   };
 }
 
@@ -54,6 +60,7 @@ export function mapProject(project: ProjectDocument) {
     published: project.published,
     liveUrl: project.caseStudyUrl || null,
     repoUrl: project.githubUrl || null,
+    createdAt: createdAtOf(project),
   };
 }
 
@@ -69,6 +76,7 @@ export function mapOffering(offering: OfferingDocument) {
     highlighted: offering.highlighted,
     sortOrder: offering.sortOrder,
     published: offering.published,
+    createdAt: createdAtOf(offering),
   };
 }
 
@@ -87,6 +95,7 @@ export function mapExperience(item: ExperienceDocument) {
     current: item.highlighted,
     sortOrder: item.sortOrder,
     published: item.published,
+    createdAt: createdAtOf(item),
   };
 }
 
@@ -96,8 +105,10 @@ export function mapSkill(skill: SkillDocument) {
     slug: idOf(skill),
     name: skill.name,
     category: skill.category,
+    icon: skill.icon || null,
     sortOrder: skill.sortOrder,
     published: skill.published,
+    createdAt: createdAtOf(skill),
   };
 }
 
@@ -113,6 +124,7 @@ export function mapTestimonial(item: TestimonialDocument) {
     avatarUrl: item.avatarUrl || null,
     sortOrder: item.sortOrder,
     published: item.published,
+    createdAt: createdAtOf(item),
   };
 }
 
@@ -125,8 +137,10 @@ export function mapArticleListItem(article: ArticleDocument) {
     excerpt: article.excerpt,
     excerptFa: article.excerptFa || '',
     coverImageUrl: article.coverImage || null,
-    publishedAt: article.publishedAt?.toISOString?.() ?? new Date().toISOString(),
+    publishedAt:
+      article.publishedAt?.toISOString?.() ?? new Date().toISOString(),
     published: article.published,
+    createdAt: createdAtOf(article),
   };
 }
 

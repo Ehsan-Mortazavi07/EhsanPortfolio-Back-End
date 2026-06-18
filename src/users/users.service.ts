@@ -8,11 +8,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { ErrorMessages } from '../common/constants/error-messages';
-import { PaginationDto } from '../common/dto/pagination.dto';
 import { PaginatedResponse } from '../common/interfaces/paginated-response.interface';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { User, UserDocument, UserRole, UserStatus } from './schemas/user.schema';
-import { assertRoleChangeAllowed, assertUserDeletionAllowed } from './user-role.util';
+import {
+  User,
+  UserDocument,
+  UserRole,
+  UserStatus,
+} from './schemas/user.schema';
+import {
+  assertRoleChangeAllowed,
+  assertUserDeletionAllowed,
+} from './user-role.util';
 
 export function isUserApproved(user: Pick<UserDocument, 'status'>): boolean {
   return !user.status || user.status === UserStatus.APPROVED;
@@ -63,9 +70,12 @@ export class UsersService {
     });
   }
 
-  async findAll(
-    query: { page?: number; pageSize?: number; status?: UserStatus; q?: string },
-  ): Promise<PaginatedResponse<UserDocument>> {
+  async findAll(query: {
+    page?: number;
+    pageSize?: number;
+    status?: UserStatus;
+    q?: string;
+  }): Promise<PaginatedResponse<UserDocument>> {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 10;
     const filter: Record<string, unknown> = { deleted: false };
@@ -73,7 +83,10 @@ export class UsersService {
 
     const term = query.q?.trim();
     if (term) {
-      const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      const regex = new RegExp(
+        term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        'i',
+      );
       filter.$or = [{ name: regex }, { email: regex }];
     }
 
@@ -99,7 +112,10 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ email: email.toLowerCase(), deleted: false });
+    return this.userModel.findOne({
+      email: email.toLowerCase(),
+      deleted: false,
+    });
   }
 
   async findByEmailWithPassword(email: string): Promise<UserDocument | null> {
@@ -108,7 +124,11 @@ export class UsersService {
       .select('+password');
   }
 
-  async update(id: string, dto: UpdateUserDto, actor?: UserDocument): Promise<UserDocument> {
+  async update(
+    id: string,
+    dto: UpdateUserDto,
+    actor?: UserDocument,
+  ): Promise<UserDocument> {
     const user = await this.findById(id);
 
     if (dto.role !== undefined) {
@@ -118,8 +138,13 @@ export class UsersService {
       try {
         assertRoleChangeAllowed(actor, user, dto);
       } catch (err) {
-        if (err instanceof Error && err.message === 'SELF_ROLE_CHANGE_FORBIDDEN') {
-          throw new ForbiddenException(ErrorMessages.SELF_ROLE_CHANGE_FORBIDDEN);
+        if (
+          err instanceof Error &&
+          err.message === 'SELF_ROLE_CHANGE_FORBIDDEN'
+        ) {
+          throw new ForbiddenException(
+            ErrorMessages.SELF_ROLE_CHANGE_FORBIDDEN,
+          );
         }
         throw new ForbiddenException(ErrorMessages.ROLE_CHANGE_FORBIDDEN);
       }
@@ -157,8 +182,13 @@ export class UsersService {
       try {
         assertUserDeletionAllowed(actor, user);
       } catch (err) {
-        if (err instanceof Error && err.message === 'SELF_USER_DELETE_FORBIDDEN') {
-          throw new ForbiddenException(ErrorMessages.SELF_USER_DELETE_FORBIDDEN);
+        if (
+          err instanceof Error &&
+          err.message === 'SELF_USER_DELETE_FORBIDDEN'
+        ) {
+          throw new ForbiddenException(
+            ErrorMessages.SELF_USER_DELETE_FORBIDDEN,
+          );
         }
         throw new ForbiddenException(ErrorMessages.USER_DELETE_FORBIDDEN);
       }

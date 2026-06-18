@@ -59,7 +59,10 @@ export class SiteSettingsService {
     }
 
     if (dto.aboutContentFa !== undefined) {
-      await deleteHtmlUploadDiff(settings.aboutContentFa, dto.aboutContentFa ?? '');
+      await deleteHtmlUploadDiff(
+        settings.aboutContentFa,
+        dto.aboutContentFa ?? '',
+      );
       payload.aboutContentFa = dto.aboutContentFa ?? '';
     }
 
@@ -76,9 +79,18 @@ export class SiteSettingsService {
     ) {
       payload.socialLinks = {
         github: mergeSocialField(dto.githubUrl, settings.socialLinks?.github),
-        linkedin: mergeSocialField(dto.linkedinUrl, settings.socialLinks?.linkedin),
-        twitter: mergeSocialField(dto.twitterUrl, settings.socialLinks?.twitter),
-        telegram: mergeSocialField(dto.telegramUrl, settings.socialLinks?.telegram),
+        linkedin: mergeSocialField(
+          dto.linkedinUrl,
+          settings.socialLinks?.linkedin,
+        ),
+        twitter: mergeSocialField(
+          dto.twitterUrl,
+          settings.socialLinks?.twitter,
+        ),
+        telegram: mergeSocialField(
+          dto.telegramUrl,
+          settings.socialLinks?.telegram,
+        ),
         instagram: mergeSocialField(
           dto.instagramUrl,
           settings.socialLinks?.instagram,
@@ -90,6 +102,28 @@ export class SiteSettingsService {
       delete payload.twitterUrl;
       delete payload.telegramUrl;
       delete payload.instagramUrl;
+    }
+
+    if (dto.pageSubtitles !== undefined) {
+      const current = settings.pageSubtitles ?? {};
+      payload.pageSubtitles = {
+        services: {
+          ...(current.services ?? {}),
+          ...(dto.pageSubtitles.services ?? {}),
+        },
+        experience: {
+          ...(current.experience ?? {}),
+          ...(dto.pageSubtitles.experience ?? {}),
+        },
+        projects: {
+          ...(current.projects ?? {}),
+          ...(dto.pageSubtitles.projects ?? {}),
+        },
+        testimonials: {
+          ...(current.testimonials ?? {}),
+          ...(dto.pageSubtitles.testimonials ?? {}),
+        },
+      };
     }
 
     Object.assign(settings, payload);

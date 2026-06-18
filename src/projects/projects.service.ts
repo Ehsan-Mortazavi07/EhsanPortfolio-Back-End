@@ -83,14 +83,20 @@ export class ProjectsService {
   }
 
   async findById(id: string): Promise<ProjectDocument> {
-    const project = await this.projectModel.findOne({ _id: id, deleted: false });
+    const project = await this.projectModel.findOne({
+      _id: id,
+      deleted: false,
+    });
     if (!project) {
       throw new NotFoundException(ErrorMessages.NOT_FOUND);
     }
     return project;
   }
 
-  async findBySlug(slug: string, publishedOnly = false): Promise<ProjectDocument> {
+  async findBySlug(
+    slug: string,
+    publishedOnly = false,
+  ): Promise<ProjectDocument> {
     const filter: Record<string, unknown> = { slug, deleted: false };
     if (publishedOnly) Object.assign(filter, PUBLISHED_CATALOG_FILTER);
     const project = await this.projectModel.findOne(filter);

@@ -54,12 +54,18 @@ export class ExperienceService {
   }
 
   async findById(id: string): Promise<ExperienceDocument> {
-    const item = await this.experienceModel.findOne({ _id: id, deleted: false });
+    const item = await this.experienceModel.findOne({
+      _id: id,
+      deleted: false,
+    });
     if (!item) throw new NotFoundException(ErrorMessages.NOT_FOUND);
     return item;
   }
 
-  async update(id: string, dto: UpdateExperienceDto): Promise<ExperienceDocument> {
+  async update(
+    id: string,
+    dto: UpdateExperienceDto,
+  ): Promise<ExperienceDocument> {
     await this.findById(id);
     const updated = await this.experienceModel.findByIdAndUpdate(id, dto, {
       new: true,

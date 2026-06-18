@@ -16,7 +16,9 @@ const hosted =
   Boolean(process.env.VERCEL);
 
 const envFile =
-  process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+  process.env.NODE_ENV === 'production'
+    ? '.env.production'
+    : '.env.development';
 
 @Module({
   imports: [

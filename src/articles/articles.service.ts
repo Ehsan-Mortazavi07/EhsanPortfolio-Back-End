@@ -82,7 +82,10 @@ export class ArticlesService {
     return item;
   }
 
-  async findBySlug(slug: string, publishedOnly = false): Promise<ArticleDocument> {
+  async findBySlug(
+    slug: string,
+    publishedOnly = false,
+  ): Promise<ArticleDocument> {
     const filter: Record<string, unknown> = { slug, deleted: false };
     if (publishedOnly) Object.assign(filter, PUBLISHED_CATALOG_FILTER);
     const item = await this.articleModel.findOne(filter);

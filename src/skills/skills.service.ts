@@ -10,6 +10,10 @@ import {
 } from '../common/helpers/catalog-filter';
 import { CreateSkillDto, UpdateSkillDto } from './dto/skill.dto';
 import { Skill, SkillDocument } from './schemas/skill.schema';
+import {
+  deleteReplacedManagedUpload,
+  normalizeMediaRef,
+} from '../helpers/upload-cleanup';
 
 @Injectable()
 export class SkillsService {
@@ -20,6 +24,7 @@ export class SkillsService {
   async create(dto: CreateSkillDto): Promise<SkillDocument> {
     return this.skillModel.create({
       ...dto,
+      icon: normalizeMediaRef(dto.icon),
       published: dto.published ?? true,
     });
   }
@@ -59,7 +64,13 @@ export class SkillsService {
   }
 
   async update(id: string, dto: UpdateSkillDto): Promise<SkillDocument> {
-    await this.findById(id);
+    const existing = await this.findById(id);
+
+    if (dto.icon !== undefined) {
+      dto.icon = normalizeMediaRef(dto.icon);
+      await deleteReplacedManagedUpload(existing.icon, dto.icon);
+    }
+
     const updated = await this.skillModel.findByIdAndUpdate(id, dto, {
       new: true,
     });

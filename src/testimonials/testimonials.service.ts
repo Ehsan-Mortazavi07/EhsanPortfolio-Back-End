@@ -64,7 +64,10 @@ export class TestimonialsService {
   }
 
   async findById(id: string): Promise<TestimonialDocument> {
-    const item = await this.testimonialModel.findOne({ _id: id, deleted: false });
+    const item = await this.testimonialModel.findOne({
+      _id: id,
+      deleted: false,
+    });
     if (!item) throw new NotFoundException(ErrorMessages.NOT_FOUND);
     return item;
   }

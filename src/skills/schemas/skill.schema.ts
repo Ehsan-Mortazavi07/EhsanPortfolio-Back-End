@@ -18,6 +18,9 @@ export class Skill {
   @Prop({ enum: SkillCategory, required: true })
   category: SkillCategory;
 
+  @Prop({ default: '' })
+  icon: string;
+
   @Prop({ min: 1, max: 5, default: 3 })
   level: number;
 

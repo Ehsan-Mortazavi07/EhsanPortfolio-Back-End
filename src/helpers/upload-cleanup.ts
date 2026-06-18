@@ -7,9 +7,7 @@ const UPLOAD_SRC_RE = /(?:src|href)=["'](\/uploads\/[^"']+)["']/gi;
 export function isManagedUpload(path: string | null | undefined): boolean {
   if (!path) return false;
   const normalized = path.trim();
-  return (
-    normalized.startsWith(UPLOADS_PREFIX) && !normalized.includes('..')
-  );
+  return normalized.startsWith(UPLOADS_PREFIX) && !normalized.includes('..');
 }
 
 export function managedUploadToDisk(path: string): string {

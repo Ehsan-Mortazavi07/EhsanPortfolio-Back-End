@@ -39,6 +39,30 @@ export class SeoDefaults {
   ogImage: string;
 }
 
+@Schema({ _id: false })
+export class PageSubtitle {
+  @Prop({ default: '' })
+  subtitle: string;
+
+  @Prop({ default: '' })
+  subtitleFa: string;
+}
+
+@Schema({ _id: false })
+export class PageSubtitles {
+  @Prop({ type: PageSubtitle, default: () => ({}) })
+  services: PageSubtitle;
+
+  @Prop({ type: PageSubtitle, default: () => ({}) })
+  experience: PageSubtitle;
+
+  @Prop({ type: PageSubtitle, default: () => ({}) })
+  projects: PageSubtitle;
+
+  @Prop({ type: PageSubtitle, default: () => ({}) })
+  testimonials: PageSubtitle;
+}
+
 @Schema({ timestamps: true })
 export class SiteSettings {
   @Prop({ default: '' })
@@ -88,6 +112,9 @@ export class SiteSettings {
 
   @Prop({ type: SeoDefaults, default: () => ({}) })
   seo: SeoDefaults;
+
+  @Prop({ type: PageSubtitles, default: () => ({}) })
+  pageSubtitles: PageSubtitles;
 }
 
 export const SiteSettingsSchema = SchemaFactory.createForClass(SiteSettings);

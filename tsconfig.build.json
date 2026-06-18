@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./build"
+    "outDir": "./.nest-build"
   },
   "exclude": ["node_modules", "test", "dist", "build", "scripts", "**/*spec.ts"]
 }

@@ -47,7 +47,8 @@ export const uploadFileFilter = (
   const ext = extname(file.originalname).toLowerCase();
   const mimeOk = ALLOWED_MIME_PATTERN.test(file.mimetype);
   const extOk = ALLOWED_EXTENSIONS.has(ext);
-  const octetPdf = ext === '.pdf' && file.mimetype === 'application/octet-stream';
+  const octetPdf =
+    ext === '.pdf' && file.mimetype === 'application/octet-stream';
 
   if (!mimeOk && !extOk && !octetPdf) {
     cb(new Error('فرمت فایل مجاز نیست'), false);

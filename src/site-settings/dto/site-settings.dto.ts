@@ -1,10 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 class SocialLinksDto {
   @IsOptional()
@@ -48,6 +43,38 @@ class SeoDefaultsDto {
   @IsOptional()
   @IsString()
   ogImage?: string;
+}
+
+class PageSubtitleDto {
+  @IsOptional()
+  @IsString()
+  subtitle?: string;
+
+  @IsOptional()
+  @IsString()
+  subtitleFa?: string;
+}
+
+class PageSubtitlesDto {
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PageSubtitleDto)
+  services?: PageSubtitleDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PageSubtitleDto)
+  experience?: PageSubtitleDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PageSubtitleDto)
+  projects?: PageSubtitleDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PageSubtitleDto)
+  testimonials?: PageSubtitleDto;
 }
 
 export class UpdateSiteSettingsDto {
@@ -141,4 +168,9 @@ export class UpdateSiteSettingsDto {
   @ValidateNested()
   @Type(() => SeoDefaultsDto)
   seo?: SeoDefaultsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PageSubtitlesDto)
+  pageSubtitles?: PageSubtitlesDto;
 }

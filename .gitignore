@@ -1,6 +1,7 @@
 node_modules
 dist
 build
+.nest-build
 .env.development
 .env.production
 .env.example
