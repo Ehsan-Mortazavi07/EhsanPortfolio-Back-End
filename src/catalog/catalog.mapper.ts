@@ -22,6 +22,8 @@ export function mapContactMessage(item: {
   email: string;
   subject?: string;
   message: string;
+  allowPublicDisplay?: boolean;
+  published?: boolean;
   read?: boolean;
   createdAt?: Date;
 }) {
@@ -31,8 +33,36 @@ export function mapContactMessage(item: {
     email: item.email,
     subject: item.subject ?? '',
     message: item.message,
+    allowPublicDisplay: item.allowPublicDisplay ?? false,
+    published: item.published ?? false,
     read: item.read ?? false,
     createdAt: createdAtOf(item) ?? new Date().toISOString(),
+  };
+}
+
+export function mapContactMessageTestimonial(item: {
+  _id?: { toString(): string };
+  id?: string;
+  name: string;
+  message: string;
+  createdAt?: Date;
+}) {
+  const id = item._id?.toString?.() ?? item.id ?? '';
+  return {
+    id: `contact-${id}`,
+    slug: `contact-${id}`,
+    name: item.name,
+    nameFa: '',
+    role: '',
+    roleFa: '',
+    company: '',
+    companyFa: '',
+    content: item.message,
+    contentFa: '',
+    avatarUrl: null,
+    sortOrder: 0,
+    published: true,
+    createdAt: createdAtOf(item),
   };
 }
 

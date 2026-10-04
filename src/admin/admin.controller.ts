@@ -22,6 +22,7 @@ import {
   UpdateArticleDto,
 } from '../articles/dto/article.dto';
 import { ContactMessagesService } from '../contact-messages/contact-messages.service';
+import { UpdateContactMessagePublicationDto } from '../contact-messages/dto/contact-message.dto';
 import { ErrorMessages } from '../common/constants/error-messages';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { UsersQueryDto } from '../users/dto/users-query.dto';
@@ -441,6 +442,18 @@ export class AdminController {
   @Patch('contact-messages/:id/read')
   markContactMessageRead(@Param('id') id: string) {
     return this.contactMessagesService.markAsRead(id);
+  }
+
+  @Patch('contact-messages/:id/publication')
+  async updateContactMessagePublication(
+    @Param('id') id: string,
+    @Body() dto: UpdateContactMessagePublicationDto,
+  ) {
+    const updated = await this.contactMessagesService.setPublished(
+      id,
+      dto.published,
+    );
+    return mapContactMessage(updated);
   }
 
   @Delete('contact-messages/:id')

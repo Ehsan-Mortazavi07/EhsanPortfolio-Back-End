@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateContactMessageDto {
   @IsString()
@@ -15,4 +21,13 @@ export class CreateContactMessageDto {
   @IsString()
   @IsNotEmpty({ message: 'پیام الزامی است' })
   message: string;
+
+  @IsOptional()
+  @IsBoolean()
+  allowPublicDisplay?: boolean;
+}
+
+export class UpdateContactMessagePublicationDto {
+  @IsBoolean()
+  published: boolean;
 }

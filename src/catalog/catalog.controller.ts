@@ -12,6 +12,7 @@ import { TestimonialsService } from '../testimonials/testimonials.service';
 import {
   mapArticleDetail,
   mapArticleListItem,
+  mapContactMessageTestimonial,
   mapExperience,
   mapOffering,
   mapProject,
@@ -47,6 +48,7 @@ export class CatalogController {
       experience,
       skills,
       testimonials,
+      approvedMessages,
       articles,
     ] = await Promise.all([
       this.siteSettingsService.get(),
@@ -55,6 +57,7 @@ export class CatalogController {
       this.experienceService.findPublished(),
       this.skillsService.findPublished(),
       this.testimonialsService.findPublished(),
+      this.contactMessagesService.findPublished(),
       this.articlesService.findAll({ page: 1, pageSize: 6 }, true),
     ]);
 
@@ -64,7 +67,10 @@ export class CatalogController {
       offerings: offerings.map(mapOffering),
       experience: experience.map(mapExperience),
       skills: skills.map(mapSkill),
-      testimonials: testimonials.map(mapTestimonial),
+      testimonials: [
+        ...testimonials.map(mapTestimonial),
+        ...approvedMessages.map(mapContactMessageTestimonial),
+      ],
       articles: articles.items.map(mapArticleListItem),
     };
   }
@@ -100,8 +106,14 @@ export class CatalogController {
 
   @Get('testimonials')
   async getTestimonials() {
-    const items = await this.testimonialsService.findPublished();
-    return items.map(mapTestimonial);
+    const [items, approvedMessages] = await Promise.all([
+      this.testimonialsService.findPublished(),
+      this.contactMessagesService.findPublished(),
+    ]);
+    return [
+      ...items.map(mapTestimonial),
+      ...approvedMessages.map(mapContactMessageTestimonial),
+    ];
   }
 
   @Get('projects')

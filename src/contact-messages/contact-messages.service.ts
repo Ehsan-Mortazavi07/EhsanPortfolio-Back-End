@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ErrorMessages } from '../common/constants/error-messages';
@@ -65,6 +69,33 @@ export class ContactMessagesService {
     );
     if (!updated) throw new NotFoundException(ErrorMessages.NOT_FOUND);
     return updated;
+  }
+
+  async setPublished(
+    id: string,
+    published: boolean,
+  ): Promise<ContactMessageDocument> {
+    const item = await this.findById(id);
+    if (published && !item.allowPublicDisplay) {
+      throw new BadRequestException(
+        'پیام‌دهنده اجازه نمایش عمومی پیام را نداده است',
+      );
+    }
+
+    const updated = await this.contactMessageModel.findByIdAndUpdate(
+      id,
+      { published },
+      { new: true },
+    );
+    if (!updated) throw new NotFoundException(ErrorMessages.NOT_FOUND);
+    return updated;
+  }
+
+  async findPublished(): Promise<ContactMessageDocument[]> {
+    return this.contactMessageModel
+      .find({ published: true, allowPublicDisplay: true })
+      .sort({ createdAt: -1 })
+      .exec();
   }
 
   async remove(id: string): Promise<void> {
