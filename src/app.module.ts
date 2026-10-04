@@ -15,17 +15,17 @@ const hosted =
   Boolean(process.env.RENDER_SERVICE_ID) ||
   Boolean(process.env.VERCEL);
 
-const envFile =
+const envFiles =
   process.env.NODE_ENV === 'production'
-    ? '.env.production'
-    : '.env.development';
+    ? ['.env.production']
+    : ['.env.development.local', '.env.development'];
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: hosted,
-      envFilePath: envFile,
+      envFilePath: envFiles,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
