@@ -22,7 +22,6 @@ export function mapContactMessage(item: {
   email: string;
   subject?: string;
   message: string;
-  allowPublicDisplay?: boolean;
   published?: boolean;
   read?: boolean;
   createdAt?: Date;
@@ -33,7 +32,6 @@ export function mapContactMessage(item: {
     email: item.email,
     subject: item.subject ?? '',
     message: item.message,
-    allowPublicDisplay: item.allowPublicDisplay ?? false,
     published: item.published ?? false,
     read: item.read ?? false,
     createdAt: createdAtOf(item) ?? new Date().toISOString(),

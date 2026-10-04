@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ErrorMessages } from '../common/constants/error-messages';
@@ -22,7 +18,7 @@ export class ContactMessagesService {
   ) {}
 
   async create(dto: CreateContactMessageDto): Promise<ContactMessageDocument> {
-    return this.contactMessageModel.create(dto);
+    return this.contactMessageModel.create({ ...dto, published: false });
   }
 
   async findAll(
@@ -75,13 +71,6 @@ export class ContactMessagesService {
     id: string,
     published: boolean,
   ): Promise<ContactMessageDocument> {
-    const item = await this.findById(id);
-    if (published && !item.allowPublicDisplay) {
-      throw new BadRequestException(
-        'پیام‌دهنده اجازه نمایش عمومی پیام را نداده است',
-      );
-    }
-
     const updated = await this.contactMessageModel.findByIdAndUpdate(
       id,
       { published },
@@ -93,7 +82,7 @@ export class ContactMessagesService {
 
   async findPublished(): Promise<ContactMessageDocument[]> {
     return this.contactMessageModel
-      .find({ published: true, allowPublicDisplay: true })
+      .find({ published: true })
       .sort({ createdAt: -1 })
       .exec();
   }

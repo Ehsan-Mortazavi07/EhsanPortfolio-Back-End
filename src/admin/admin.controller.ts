@@ -22,7 +22,10 @@ import {
   UpdateArticleDto,
 } from '../articles/dto/article.dto';
 import { ContactMessagesService } from '../contact-messages/contact-messages.service';
-import { UpdateContactMessagePublicationDto } from '../contact-messages/dto/contact-message.dto';
+import {
+  CreateContactMessageDto,
+  UpdateContactMessagePublicationDto,
+} from '../contact-messages/dto/contact-message.dto';
 import { ErrorMessages } from '../common/constants/error-messages';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { UsersQueryDto } from '../users/dto/users-query.dto';
@@ -431,6 +434,12 @@ export class AdminController {
   async listContactMessages(@Query() query: PaginationDto) {
     const result = await this.contactMessagesService.findAll(query);
     return { ...result, items: result.items.map(mapContactMessage) };
+  }
+
+  @Post('contact-messages')
+  async createContactMessage(@Body() dto: CreateContactMessageDto) {
+    const created = await this.contactMessagesService.create(dto);
+    return mapContactMessage(created);
   }
 
   @Get('contact-messages/:id')

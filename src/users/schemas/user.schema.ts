@@ -6,6 +6,7 @@ export type UserDocument = HydratedDocument<User>;
 export enum UserRole {
   CREATOR = 'creator',
   ADMIN = 'admin',
+  EDITOR = 'editor',
   USER = 'user',
 }
 

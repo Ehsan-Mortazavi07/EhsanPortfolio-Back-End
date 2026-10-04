@@ -18,9 +18,6 @@ export class ContactMessage {
   message: string;
 
   @Prop({ default: false })
-  allowPublicDisplay: boolean;
-
-  @Prop({ default: false })
   published: boolean;
 
   @Prop({ default: false })

@@ -2,7 +2,11 @@ import { UserRole, UserStatus } from './schemas/user.schema';
 import { UpdateUserDto } from './dto/user.dto';
 import type { UserDocument } from './schemas/user.schema';
 
-const PANEL_ROLES = new Set<UserRole>([UserRole.ADMIN, UserRole.CREATOR]);
+const PANEL_ROLES = new Set<UserRole>([
+  UserRole.ADMIN,
+  UserRole.EDITOR,
+  UserRole.CREATOR,
+]);
 
 export function hasPanelAccess(role?: UserRole | null): boolean {
   return Boolean(role && PANEL_ROLES.has(role));

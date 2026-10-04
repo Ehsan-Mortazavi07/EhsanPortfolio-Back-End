@@ -21,10 +21,6 @@ export class CreateContactMessageDto {
   @IsString()
   @IsNotEmpty({ message: 'پیام الزامی است' })
   message: string;
-
-  @IsOptional()
-  @IsBoolean()
-  allowPublicDisplay?: boolean;
 }
 
 export class UpdateContactMessagePublicationDto {
