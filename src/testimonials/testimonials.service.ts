@@ -31,7 +31,8 @@ export class TestimonialsService {
     return this.testimonialModel.create({
       ...dto,
       avatarUrl: normalizeMediaRef(dto.avatarUrl),
-      published: dto.published ?? true,
+      // Reviews must go through an explicit approval update before appearing publicly.
+      published: false,
     });
   }
 

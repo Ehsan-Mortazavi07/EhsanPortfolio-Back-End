@@ -15,11 +15,23 @@ export class CreateTestimonialDto {
 
   @IsOptional()
   @IsString()
+  nameFa?: string;
+
+  @IsOptional()
+  @IsString()
   role?: string;
 
   @IsOptional()
   @IsString()
+  roleFa?: string;
+
+  @IsOptional()
+  @IsString()
   company?: string;
+
+  @IsOptional()
+  @IsString()
+  companyFa?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'متن نظر الزامی است' })
@@ -55,11 +67,23 @@ export class UpdateTestimonialDto {
 
   @IsOptional()
   @IsString()
+  nameFa?: string;
+
+  @IsOptional()
+  @IsString()
   role?: string;
 
   @IsOptional()
   @IsString()
+  roleFa?: string;
+
+  @IsOptional()
+  @IsString()
   company?: string;
+
+  @IsOptional()
+  @IsString()
+  companyFa?: string;
 
   @IsOptional()
   @IsString()

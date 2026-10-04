@@ -9,10 +9,19 @@ export class Testimonial {
   name: string;
 
   @Prop({ default: '', trim: true })
+  nameFa: string;
+
+  @Prop({ default: '', trim: true })
   role: string;
 
   @Prop({ default: '', trim: true })
+  roleFa: string;
+
+  @Prop({ default: '', trim: true })
   company: string;
+
+  @Prop({ default: '', trim: true })
+  companyFa: string;
 
   @Prop({ required: true })
   content: string;
@@ -26,7 +35,7 @@ export class Testimonial {
   @Prop({ min: 1, max: 5, default: 5 })
   rating: number;
 
-  @Prop({ default: true })
+  @Prop({ default: false })
   published: boolean;
 
   @Prop({ default: 0 })
