@@ -37,7 +37,19 @@ export class ArticlesService {
     @InjectModel(Article.name) private articleModel: Model<ArticleDocument>,
   ) {}
 
+  private async purgeDeletedArticleWithSlug(slug: string): Promise<void> {
+    const deletedArticle = await this.articleModel.findOne({
+      slug,
+      deleted: true,
+    });
+    if (!deletedArticle) return;
+
+    await deleteManagedUploads(collectArticleUploads(deletedArticle));
+    await this.articleModel.findByIdAndDelete(deletedArticle._id);
+  }
+
   async create(dto: CreateArticleDto): Promise<ArticleDocument> {
+    await this.purgeDeletedArticleWithSlug(dto.slug);
     const existing = await this.articleModel.findOne({
       slug: dto.slug,
       deleted: false,
@@ -97,6 +109,7 @@ export class ArticlesService {
     const existing = await this.findById(id);
 
     if (dto.slug) {
+      await this.purgeDeletedArticleWithSlug(dto.slug);
       const slugTaken = await this.articleModel.findOne({
         slug: dto.slug,
         deleted: false,
@@ -134,7 +147,8 @@ export class ArticlesService {
 
   async remove(id: string): Promise<void> {
     const article = await this.findById(id);
-    await this.articleModel.findByIdAndUpdate(id, { deleted: true });
+    const deletedArticle = await this.articleModel.findByIdAndDelete(id);
+    if (!deletedArticle) throw new NotFoundException(ErrorMessages.NOT_FOUND);
     await deleteManagedUploads(collectArticleUploads(article));
   }
 

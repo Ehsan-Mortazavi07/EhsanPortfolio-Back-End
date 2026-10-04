@@ -29,7 +29,18 @@ export function isUserApproved(user: Pick<UserDocument, 'status'>): boolean {
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+  private async purgeDeletedUserWithEmail(email: string): Promise<void> {
+    const deletedUser = await this.userModel.findOne({
+      email: email.toLowerCase(),
+      deleted: true,
+    });
+    if (deletedUser) {
+      await this.userModel.findByIdAndDelete(deletedUser._id);
+    }
+  }
+
   async create(dto: CreateUserDto): Promise<UserDocument> {
+    await this.purgeDeletedUserWithEmail(dto.email);
     const existing = await this.userModel.findOne({
       email: dto.email.toLowerCase(),
       deleted: false,
@@ -52,6 +63,7 @@ export class UsersService {
     password: string;
     name: string;
   }): Promise<UserDocument> {
+    await this.purgeDeletedUserWithEmail(data.email);
     const existing = await this.userModel.findOne({
       email: data.email.toLowerCase(),
       deleted: false,
@@ -151,6 +163,7 @@ export class UsersService {
     }
 
     if (dto.email && dto.email.toLowerCase() !== user.email) {
+      await this.purgeDeletedUserWithEmail(dto.email);
       const existing = await this.userModel.findOne({
         email: dto.email.toLowerCase(),
         deleted: false,
@@ -194,7 +207,10 @@ export class UsersService {
       }
     }
 
-    await this.userModel.findByIdAndUpdate(id, { deleted: true });
+    const deletedUser = await this.userModel.findByIdAndDelete(id);
+    if (!deletedUser) {
+      throw new NotFoundException(ErrorMessages.NOT_FOUND);
+    }
   }
 
   async count(): Promise<number> {

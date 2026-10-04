@@ -76,7 +76,8 @@ export class ExperienceService {
 
   async remove(id: string): Promise<void> {
     await this.findById(id);
-    await this.experienceModel.findByIdAndUpdate(id, { deleted: true });
+    const deletedExperience = await this.experienceModel.findByIdAndDelete(id);
+    if (!deletedExperience) throw new NotFoundException(ErrorMessages.NOT_FOUND);
   }
 
   async count(): Promise<number> {

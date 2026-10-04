@@ -27,7 +27,21 @@ export class OfferingsService {
     @InjectModel(Offering.name) private offeringModel: Model<OfferingDocument>,
   ) {}
 
+  private async purgeDeletedOfferingWithSlug(slug: string): Promise<void> {
+    const deletedOffering = await this.offeringModel.findOne({
+      slug,
+      deleted: true,
+    });
+    if (!deletedOffering) return;
+
+    if (isManagedUpload(deletedOffering.icon)) {
+      await deleteManagedUpload(deletedOffering.icon);
+    }
+    await this.offeringModel.findByIdAndDelete(deletedOffering._id);
+  }
+
   async create(dto: CreateOfferingDto): Promise<OfferingDocument> {
+    await this.purgeDeletedOfferingWithSlug(dto.slug);
     const existing = await this.offeringModel.findOne({
       slug: dto.slug,
       deleted: false,
@@ -90,6 +104,7 @@ export class OfferingsService {
   async update(id: string, dto: UpdateOfferingDto): Promise<OfferingDocument> {
     const existing = await this.findById(id);
     if (dto.slug) {
+      await this.purgeDeletedOfferingWithSlug(dto.slug);
       const slugTaken = await this.offeringModel.findOne({
         slug: dto.slug,
         deleted: false,
@@ -118,7 +133,8 @@ export class OfferingsService {
 
   async remove(id: string): Promise<void> {
     const item = await this.findById(id);
-    await this.offeringModel.findByIdAndUpdate(id, { deleted: true });
+    const deletedOffering = await this.offeringModel.findByIdAndDelete(id);
+    if (!deletedOffering) throw new NotFoundException(ErrorMessages.NOT_FOUND);
     if (isManagedUpload(item.icon)) {
       await deleteManagedUpload(item.icon);
     }

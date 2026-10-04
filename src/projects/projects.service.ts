@@ -38,7 +38,19 @@ export class ProjectsService {
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
   ) {}
 
+  private async purgeDeletedProjectWithSlug(slug: string): Promise<void> {
+    const deletedProject = await this.projectModel.findOne({
+      slug,
+      deleted: true,
+    });
+    if (!deletedProject) return;
+
+    await deleteManagedUploads(collectProjectUploads(deletedProject));
+    await this.projectModel.findByIdAndDelete(deletedProject._id);
+  }
+
   async create(dto: CreateProjectDto): Promise<ProjectDocument> {
+    await this.purgeDeletedProjectWithSlug(dto.slug);
     const existing = await this.projectModel.findOne({
       slug: dto.slug,
       deleted: false,
@@ -110,6 +122,7 @@ export class ProjectsService {
     const existing = await this.findById(id);
 
     if (dto.slug) {
+      await this.purgeDeletedProjectWithSlug(dto.slug);
       const slugTaken = await this.projectModel.findOne({
         slug: dto.slug,
         deleted: false,
@@ -156,7 +169,10 @@ export class ProjectsService {
 
   async remove(id: string): Promise<void> {
     const project = await this.findById(id);
-    await this.projectModel.findByIdAndUpdate(id, { deleted: true });
+    const deletedProject = await this.projectModel.findByIdAndDelete(id);
+    if (!deletedProject) {
+      throw new NotFoundException(ErrorMessages.NOT_FOUND);
+    }
     await deleteManagedUploads(collectProjectUploads(project));
   }
 

@@ -94,7 +94,8 @@ export class TestimonialsService {
 
   async remove(id: string): Promise<void> {
     const item = await this.findById(id);
-    await this.testimonialModel.findByIdAndUpdate(id, { deleted: true });
+    const deletedItem = await this.testimonialModel.findByIdAndDelete(id);
+    if (!deletedItem) throw new NotFoundException(ErrorMessages.NOT_FOUND);
     if (isManagedUpload(item.avatarUrl)) {
       await deleteManagedUpload(item.avatarUrl);
     }

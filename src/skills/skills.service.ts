@@ -11,7 +11,9 @@ import {
 import { CreateSkillDto, UpdateSkillDto } from './dto/skill.dto';
 import { Skill, SkillDocument } from './schemas/skill.schema';
 import {
+  deleteManagedUpload,
   deleteReplacedManagedUpload,
+  isManagedUpload,
   normalizeMediaRef,
 } from '../helpers/upload-cleanup';
 
@@ -79,8 +81,10 @@ export class SkillsService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.findById(id);
-    await this.skillModel.findByIdAndUpdate(id, { deleted: true });
+    const skill = await this.findById(id);
+    const deletedSkill = await this.skillModel.findByIdAndDelete(id);
+    if (!deletedSkill) throw new NotFoundException(ErrorMessages.NOT_FOUND);
+    if (isManagedUpload(skill.icon)) await deleteManagedUpload(skill.icon);
   }
 
   async count(): Promise<number> {
