@@ -62,6 +62,9 @@ export class ProjectsService {
       ...dto,
       coverImage: normalizeMediaRef(dto.coverImage),
       homeImage: normalizeMediaRef(dto.homeImage),
+      gallery: (dto.gallery ?? [])
+        .map(normalizeMediaRef)
+        .filter((path) => path.length > 0),
       published: dto.published ?? true,
     });
   }
@@ -134,19 +137,37 @@ export class ProjectsService {
       }
     }
 
-    if (dto.coverImage !== undefined || dto.homeImage !== undefined) {
+    const mediaChanged =
+      dto.coverImage !== undefined ||
+      dto.homeImage !== undefined ||
+      dto.gallery !== undefined;
+
+    if (mediaChanged) {
       if (dto.coverImage !== undefined) {
         dto.coverImage = normalizeMediaRef(dto.coverImage);
       }
       if (dto.homeImage !== undefined) {
         dto.homeImage = normalizeMediaRef(dto.homeImage);
       }
+      if (dto.gallery !== undefined) {
+        dto.gallery = dto.gallery
+          .map(normalizeMediaRef)
+          .filter((path) => path.length > 0);
+      }
 
       const oldImages = new Set(
-        [existing.coverImage, existing.homeImage].filter(isManagedUpload),
+        [
+          existing.coverImage,
+          existing.homeImage,
+          ...(existing.gallery ?? []),
+        ].filter(isManagedUpload),
       );
       const nextImages = new Set(
-        [dto.coverImage ?? existing.coverImage, dto.homeImage ?? existing.homeImage].filter(isManagedUpload),
+        [
+          dto.coverImage ?? existing.coverImage,
+          dto.homeImage ?? existing.homeImage,
+          ...(dto.gallery ?? existing.gallery ?? []),
+        ].filter(isManagedUpload),
       );
       await deleteManagedUploads(
         [...oldImages].filter((path) => !nextImages.has(path)),
@@ -159,17 +180,6 @@ export class ProjectsService {
 
     if (dto.contentHtmlFa !== undefined) {
       await deleteHtmlUploadDiff(existing.contentHtmlFa, dto.contentHtmlFa);
-    }
-
-    if (dto.gallery !== undefined) {
-      const oldGallery = new Set(
-        (existing.gallery ?? []).filter((path) => isManagedUpload(path)),
-      );
-      const newGallery = new Set(
-        dto.gallery.filter((path) => isManagedUpload(path)),
-      );
-      const removed = [...oldGallery].filter((path) => !newGallery.has(path));
-      await deleteManagedUploads(removed);
     }
 
     const updated = await this.projectModel.findByIdAndUpdate(id, dto, {

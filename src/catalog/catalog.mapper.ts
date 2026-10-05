@@ -104,6 +104,7 @@ export function mapProject(project: ProjectDocument) {
     contentHtmlFa: project.contentHtmlFa || '',
     coverImageUrl: project.coverImage || null,
     homeImageUrl: project.homeImage || null,
+    gallery: project.gallery ?? [],
     tags: project.techStack ?? [],
     featured: project.featured,
     sortOrder: project.sortOrder,
