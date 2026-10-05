@@ -45,6 +45,10 @@ export class CreateProjectDto {
   coverImage?: string;
 
   @IsOptional()
+  @IsString()
+  homeImage?: string;
+
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
   gallery?: string[];
@@ -111,6 +115,10 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   coverImage?: string;
+
+  @IsOptional()
+  @IsString()
+  homeImage?: string;
 
   @IsOptional()
   @IsArray()

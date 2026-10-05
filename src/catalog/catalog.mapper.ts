@@ -103,6 +103,7 @@ export function mapProject(project: ProjectDocument) {
     contentHtml: project.contentHtml,
     contentHtmlFa: project.contentHtmlFa || '',
     coverImageUrl: project.coverImage || null,
+    homeImageUrl: project.homeImage || null,
     tags: project.techStack ?? [],
     featured: project.featured,
     sortOrder: project.sortOrder,

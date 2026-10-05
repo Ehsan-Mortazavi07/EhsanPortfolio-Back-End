@@ -32,6 +32,9 @@ export class Project {
   @Prop({ default: '' })
   coverImage: string;
 
+  @Prop({ default: '' })
+  homeImage: string;
+
   @Prop({ type: [String], default: [] })
   gallery: string[];
 

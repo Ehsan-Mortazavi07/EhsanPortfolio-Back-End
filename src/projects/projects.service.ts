@@ -15,7 +15,6 @@ import {
 import {
   deleteHtmlUploadDiff,
   deleteManagedUploads,
-  deleteReplacedManagedUpload,
   extractManagedUploadsFromHtml,
   isManagedUpload,
   normalizeMediaRef,
@@ -26,6 +25,7 @@ import { Project, ProjectDocument } from './schemas/project.schema';
 function collectProjectUploads(project: ProjectDocument): string[] {
   return [
     project.coverImage,
+    project.homeImage,
     ...(project.gallery ?? []),
     ...extractManagedUploadsFromHtml(project.contentHtml),
     ...extractManagedUploadsFromHtml(project.contentHtmlFa),
@@ -61,6 +61,7 @@ export class ProjectsService {
     return this.projectModel.create({
       ...dto,
       coverImage: normalizeMediaRef(dto.coverImage),
+      homeImage: normalizeMediaRef(dto.homeImage),
       published: dto.published ?? true,
     });
   }
@@ -133,10 +134,23 @@ export class ProjectsService {
       }
     }
 
-    if (dto.coverImage !== undefined) {
-      const nextCover = normalizeMediaRef(dto.coverImage);
-      await deleteReplacedManagedUpload(existing.coverImage, nextCover);
-      dto.coverImage = nextCover;
+    if (dto.coverImage !== undefined || dto.homeImage !== undefined) {
+      if (dto.coverImage !== undefined) {
+        dto.coverImage = normalizeMediaRef(dto.coverImage);
+      }
+      if (dto.homeImage !== undefined) {
+        dto.homeImage = normalizeMediaRef(dto.homeImage);
+      }
+
+      const oldImages = new Set(
+        [existing.coverImage, existing.homeImage].filter(isManagedUpload),
+      );
+      const nextImages = new Set(
+        [dto.coverImage ?? existing.coverImage, dto.homeImage ?? existing.homeImage].filter(isManagedUpload),
+      );
+      await deleteManagedUploads(
+        [...oldImages].filter((path) => !nextImages.has(path)),
+      );
     }
 
     if (dto.contentHtml !== undefined) {
