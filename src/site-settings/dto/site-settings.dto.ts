@@ -112,6 +112,14 @@ export class UpdateSiteSettingsDto {
 
   @IsOptional()
   @IsString()
+  logoUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  faviconUrl?: string;
+
+  @IsOptional()
+  @IsString()
   githubUrl?: string;
 
   @IsOptional()

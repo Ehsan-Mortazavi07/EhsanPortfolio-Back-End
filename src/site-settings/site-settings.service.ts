@@ -47,6 +47,20 @@ export class SiteSettingsService {
       delete payload.heroPortraitUrl;
     }
 
+    if (dto.logoUrl !== undefined) {
+      const nextLogo = normalizeMediaRef(dto.logoUrl);
+      await deleteReplacedManagedUpload(settings.logoImage, nextLogo);
+      payload.logoImage = nextLogo;
+      delete payload.logoUrl;
+    }
+
+    if (dto.faviconUrl !== undefined) {
+      const nextFavicon = normalizeMediaRef(dto.faviconUrl);
+      await deleteReplacedManagedUpload(settings.faviconImage, nextFavicon);
+      payload.faviconImage = nextFavicon;
+      delete payload.faviconUrl;
+    }
+
     if (dto.cvUrl !== undefined) {
       const nextCv = normalizeMediaRef(dto.cvUrl);
       await deleteReplacedManagedUpload(settings.cvUrl, nextCv);

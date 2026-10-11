@@ -87,6 +87,12 @@ export class SiteSettings {
   heroImage: string;
 
   @Prop({ default: '' })
+  logoImage: string;
+
+  @Prop({ default: '' })
+  faviconImage: string;
+
+  @Prop({ default: '' })
   cvUrl: string;
 
   @Prop({ default: '' })
