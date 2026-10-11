@@ -73,8 +73,6 @@ export function mapSiteSettings(settings: SiteSettingsDocument) {
     heroBio: settings.heroBio,
     heroBioFa: settings.heroBioFa || '',
     heroPortraitUrl: settings.heroImage || null,
-    logoUrl: settings.logoImage || '/images/brand/em-monogram.png',
-    faviconUrl: settings.faviconImage || '/images/brand/em-monogram.png',
     cvUrl: settings.cvUrl || null,
     email: settings.email,
     phone: settings.phone || null,
